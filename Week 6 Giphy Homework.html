@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>VANESSA'S GIPHY API</title>
+        <!--Bootstrap-->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">     
+        <!--jQuery Library -->
+        <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
+    </head>
+
+<body background="https://wallpaperstock.net/wallpapers/thumbs1/44693wide.jpg">
+<h4 class="text-center" style="color: pink">Yay!!!</h4>
+<div id="listMe"></div>
+<form>
+    <div class="row">
+        <div class="col-md-3">
+            <input type="text" id="enterGiph" class="form-control" placeholder="Search Gifs">
+        </div>
+        <input id="moreGiphys" type="submit" class="btn btn-success" value="Search Me!">
+        <!-- If there are any error messages, they will appear here -->
+        <span id="searching" style="color: white; background: pink"></span>
+    </div>
+</form>
+<div id="ratings"></div>
+
+<script type="text/javascript">
+	var topics = ["Dandelions", "Zebras", "Dance", "Read", "Galaxy", "Pixar", "Cartoon", "Kaskade", "Music", "Sleep"];
+    var topicsResults = "";
+    function clickMe () {
+        $("#listMe").empty();
+        $("#enterGiph").val("");
+        for (var i = 0; i < topics.length; i++) {
+            var button = $("<button class='btn btn-primary'>");
+            button.addClass("vanessaGiph");
+            button.attr("vanessaGiph-name", topics[i]);
+            button.text(topics[i]);
+            $("#listMe").append(button);
+            $("#listMe").append(" ");
+        }
+    }
+    clickMe();
+
+$("#moreGiphys").on("click", function(event) {
+    $("#searching").empty();
+    event.preventDefault();
+    var vanessaGiphInput = $("#enterGiph").val().trim();
+    var vanessaGiphTerm = $(this).attr("vanessaGiph-name");
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + vanessaGiphInput + "&limit=2&api_key=dc6zaTOxFJmzC";
+        $.ajax({ url: queryURL, method: "GET"}).done(function(response) {
+        if (response.pagination.total_count >= 10) {
+            topics.push(vanessaGiphInput);
+            clickMe(); }
+        else if (response.pagination.total_count === 0) {
+            $("#searching").html(" Sorry, there were no results for this.  Please try again."); }
+        else if (response.pagination.total_count === 1) { $("#searching").html(" Sorry, there was only 1 result for this.  Please try again."); }
+        else { $("#searching").html(" Sorry, there were only " + response.pagination.total_count + " results for this.  Please try again."); }
+        $("#enterGiph").val("");
+        });
+});
+
+$(document).on("click", ".vanessaGiph", display);
+function display() {
+
+    $("#searching").empty();
+    var vanessaGiphTerm = $(this).attr("vanessaGiph-name");
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + vanessaGiphTerm + "&limit=10&api_key=dc6zaTOxFJmzC";
+    $.ajax({ url: queryURL, method: "GET"}).done(function(response) {
+        for (var j = 0; j < response.data.length; j++) {
+            
+            // Gets the animated gif URL
+            var animate = response.data[j].images.fixed_width.url;
+            // Gets the still gif URL
+            var still = response.data[j].images.fixed_width_still.url;
+            var rating = "Rating: " + (response.data[j].rating).toUpperCase();
+            var topicsResults = $("<img>");
+            
+            $("#ratings").css("color", "pink");
+            var ratingDiv = $("<div id='ratingDiv'>" + rating + "</div>");
+            $(ratingDiv).css({"text-align":"center", "font-size":"10px", "width":"100", "display":"block"});
+            topicsResults.attr({"animate":animate, "still":still, "src":still, "state":"still"});
+            var ratingAndImage = $("<div>");
+            $(ratingAndImage).css({"float":"left"});
+            $(ratingAndImage).prepend(ratingDiv, topicsResults);
+            $("#ratings").prepend(ratingAndImage);
+            $(topicsResults).on("click", function(event) {
+                $("#searching").empty();
+                var state = $(this).attr("state");
+                var source = $(this).attr("src");
+                if (state === "still") {
+                $(this).attr("src", $(this).attr("animate"));
+                $(this).attr("state", "animate"); }
+                else {
+                $(this).attr("src", $(this).attr("still"));
+                $(this).attr("state", "still"); } 
+            });
+        }
+   });
+}
+</script>
+</body>
+</html>
