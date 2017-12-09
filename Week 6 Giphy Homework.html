@@ -11,12 +11,15 @@
 <body background="https://wallpaperstock.net/wallpapers/thumbs1/44693wide.jpg">
 <h4 class="text-center" style="color: pink">Yay!!!</h4>
 <div id="listMe"></div>
+
+
+
 <form>
     <div class="row">
         <div class="col-md-3">
             <input type="text" id="enterGiph" class="form-control" placeholder="Search Gifs">
         </div>
-        <input id="moreGiphys" type="submit" class="btn btn-success" value="Search Me!">
+        <input id="moreGiphys" type="submit" class="btn-group-vertical" role="group" aria-label="..." value="Search Me!">
         <!-- If there are any error messages, they will appear here -->
         <span id="searching" style="color: white; background: pink"></span>
     </div>
@@ -51,9 +54,9 @@ $("#moreGiphys").on("click", function(event) {
             topics.push(vanessaGiphInput);
             clickMe(); }
         else if (response.pagination.total_count === 0) {
-            $("#searching").html(" Sorry, there were no results for this.  Please try again."); }
-        else if (response.pagination.total_count === 1) { $("#searching").html(" Sorry, there was only 1 result for this.  Please try again."); }
-        else { $("#searching").html(" Sorry, there were only " + response.pagination.total_count + " results for this.  Please try again."); }
+            $("#searching").html("Search Again"); }
+        else if (response.pagination.total_count === 1) { $("#searching").html("This is not popular"); }
+        else { $("#searching").html("Oh Man!" + response.pagination.total_count + "One More Time?"); }
         $("#enterGiph").val("");
         });
 });
