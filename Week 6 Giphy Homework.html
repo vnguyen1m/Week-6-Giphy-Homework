@@ -12,15 +12,12 @@
 <h4 class="text-center" style="color: pink">Yay!!!</h4>
 <div id="listMe"></div>
 
-
-
 <form>
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-6">
             <input type="text" id="enterGiph" class="form-control" placeholder="Search Gifs">
         </div>
         <input id="moreGiphys" type="submit" class="btn-group-vertical" role="group" aria-label="..." value="Search Me!">
-        <!-- If there are any error messages, they will appear here -->
         <span id="searching" style="color: white; background: pink"></span>
     </div>
 </form>
@@ -70,16 +67,14 @@ function display() {
     $.ajax({ url: queryURL, method: "GET"}).done(function(response) {
         for (var j = 0; j < response.data.length; j++) {
             
-            // Gets the animated gif URL
             var animate = response.data[j].images.fixed_width.url;
-            // Gets the still gif URL
             var still = response.data[j].images.fixed_width_still.url;
             var rating = "Rating: " + (response.data[j].rating).toUpperCase();
             var topicsResults = $("<img>");
             
             $("#ratings").css("color", "pink");
             var ratingDiv = $("<div id='ratingDiv'>" + rating + "</div>");
-            $(ratingDiv).css({"text-align":"center", "font-size":"10px", "width":"100", "display":"block"});
+            $(ratingDiv).css({"text-align":"center", "font-size":"15px", "width":"300", "display":"block"});
             topicsResults.attr({"animate":animate, "still":still, "src":still, "state":"still"});
             var ratingAndImage = $("<div>");
             $(ratingAndImage).css({"float":"left"});
